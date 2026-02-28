@@ -1,1 +1,484 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Brusmods | Premium Templates</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 
+  <style>
+    :root {
+      --bg: #000000;
+      --card-bg: #0a0a0a;
+      --card-border: #1a1a1a;
+      --text: #f1f1f1;
+      --text-secondary: #a0a0a0;
+      --accent: #ff2d55;
+      --accent-dark: #c41e3b;
+      --accent-glow: rgba(255, 45, 85, 0.20);
+      --sidebar-width: 280px;
+      --header-bg: #000000;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    #particles { position:fixed; inset:0; z-index:-1; pointer-events:none; }
+
+    /* Loader global descarga */
+    #download-loader {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.94);
+      z-index: 9999;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .progress-container {
+      width: 80%;
+      max-width: 320px;
+      height: 10px;
+      background: #222;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-dark), var(--accent));
+      transition: width 3.2s ease-in-out;
+      box-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    .loader-text {
+      color: var(--accent);
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+
+    /* Loader traducción */
+    #translation-loader {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.98);
+      z-index: 10000;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .spinner {
+      width: 60px;
+      height: 60px;
+      border: 5px solid rgba(255,45,85,0.15);
+      border-top: 5px solid var(--accent);
+      border-radius: 50%;
+      animation: spin 1.1s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Header */
+    header {
+      background: var(--header-bg);
+      backdrop-filter: blur(12px);
+      padding: 12px 5%;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid #111;
+      transition: z-index 0.3s;
+    }
+
+    header.sidebar-open {
+      z-index: 90; /* baja cuando sidebar está abierto */
+    }
+
+    .menu-trigger {
+      font-size: 2.2rem;
+      color: var(--accent);
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: 10px;
+      transition: all 0.25s;
+    }
+
+    .menu-trigger:hover { background: rgba(255,45,85,0.15); }
+
+    .logo-img { height: 36px; }
+
+    /* Sidebar - Mejorado para móvil */
+    .sidebar-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 998;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.4s, visibility 0.4s;
+    }
+
+    .sidebar-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: -100%;
+      width: 85%;                /* más ancho en móvil */
+      max-width: var(--sidebar-width);
+      height: 100%;
+      background: #050505;
+      border-right: 1px solid #111;
+      z-index: 999;
+      transition: left 0.4s cubic-bezier(0.32,0.72,0,1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar.active { left: 0; }
+
+    .sidebar-header {
+      padding: 20px 24px;
+      display: flex;
+      justify-content: flex-end;
+      border-bottom: 1px solid #111;
+    }
+
+    .close-btn {
+      font-size: 2.5rem;
+      color: var(--accent);
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+
+    .close-btn:hover {
+      color: #ff4d6a;
+      transform: rotate(90deg);
+    }
+
+    .sidebar-menu {
+      list-style: none;
+      padding: 12px 0;
+    }
+
+    .sidebar-item {
+      padding: 16px 28px;
+      color: var(--text-secondary);
+      font-weight: 500;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.22s;
+    }
+
+    .sidebar-item:hover {
+      color: var(--accent);
+      background: rgba(255,45,85,0.08);
+    }
+
+    .sidebar-item.active-link {
+      color: var(--accent);
+      background: rgba(255,45,85,0.11);
+      border-left: 4px solid var(--accent);
+    }
+
+    .extra-btns {
+      padding: 24px 24px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .btn-side {
+      padding: 16px;
+      border-radius: 12px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 1rem;
+      color: white;
+      background: linear-gradient(135deg, var(--accent-dark), var(--accent));
+      box-shadow: 0 6px 20px rgba(255,45,85,0.35);
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+
+    .btn-side:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(255,45,85,0.55);
+    }
+
+    /* Contenido principal */
+    .container {
+      max-width: 1140px;
+      margin: 40px auto;
+      padding: 0 16px;
+    }
+
+    .section-title {
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 1.5rem;
+      margin-bottom: 40px;
+      font-weight: 500;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    @media (min-width: 768px) {
+      .grid { grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); }
+      .sidebar { width: var(--sidebar-width); }
+      .sidebar-overlay { z-index: 1000; }
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--card-border);
+      transition: all 0.35s;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 45px rgba(0,0,0,0.7), 0 0 0 1.5px rgba(255,45,85,0.15);
+    }
+
+    .img-box {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: #050505;
+      overflow: hidden;
+    }
+
+    .img-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.45s;
+    }
+
+    .card:hover .img-box img { transform: scale(1.07); }
+
+    .card-info { padding: 20px; }
+
+    .card-info h3 { font-size: 1.25rem; margin-bottom: 8px; font-weight: 600; }
+
+    .card-info p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      line-height: 1.45;
+    }
+
+    .dl-btn {
+      padding: 14px;
+      background: linear-gradient(135deg, var(--accent-dark), var(--accent));
+      color: #fff;
+      text-align: center;
+      font-weight: 700;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      border: none;
+      width: 100%;
+      transition: all 0.3s;
+      box-shadow: 0 5px 15px var(--accent-glow);
+    }
+
+    .dl-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px var(--accent-glow);
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<div id="download-loader">
+  <div class="loader-text">Preparando descarga...</div>
+  <div class="progress-container">
+    <div class="progress-bar" id="progress"></div>
+  </div>
+</div>
+
+<div id="translation-loader">
+  <div class="spinner"></div>
+  <p style="margin-top:20px; color:var(--accent); font-weight:600;">Traduciendo página...</p>
+</div>
+
+<div class="sidebar-overlay" id="overlay"></div>
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="close-btn" id="closeMenu">✕</div>
+  </div>
+  
+  <ul class="sidebar-menu">
+    <li class="sidebar-item" onclick="changeLang('es')">Español 🇪🇸</li>
+    <li class="sidebar-item" onclick="changeLang('en')">English 🇺🇸</li>
+    <li class="sidebar-item active-link" id="menu-home" style="margin-top:16px;">Inicio</li>
+  </ul>
+
+  <div class="extra-btns">
+    <a href="https://www.paypal.com/donate" target="_blank" class="btn-side btn-donar" id="btn-donar">DONACIONES ❤️</a>
+    <a href="https://wa.me/573001234567?text=Hola%2C%20necesito%20soporte%20con%20Brusmods" target="_blank" class="btn-side btn-soporte" id="btn-soporte">SOPORTE 🛠️</a>
+  </div>
+</nav>
+
+<header id="header">
+  <div class="menu-trigger" id="openMenu">☰</div>
+  <div class="logo-area">
+    <img src="tu-logo.png" alt="Brusmods" class="logo-img">
+  </div>
+</header>
+
+<div class="container">
+  <h1 class="section-title" id="main-title">Plantillas Premium</h1>
+
+  <div class="grid">
+    <div class="card">
+      <div class="img-box"><img src="1.png" alt="Zay eCommerce"></div>
+      <div class="card-info">
+        <h3>Zay eCommerce</h3>
+        <p class="t-desc" data-es="Blanco, Bootstrap, Comercio electrónico, Profesional..." data-en="White, Bootstrap, eCommerce, Professional...">Blanco, Bootstrap, Comercio electrónico, Profesional...</p>
+        <button class="dl-btn" data-url="https://filesamples.com/samples/code/html/sample.html">DESCARGAR</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="img-box"><img src="2.png" alt="Limelight Design"></div>
+      <div class="card-info">
+        <h3>Limelight Design</h3>
+        <p class="t-desc" data-es="Minimalista, Agencias, Moderno..." data-en="Minimalist, Agency, Modern...">Minimalista, Agencias, Moderno...</p>
+        <button class="dl-btn" data-url="https://filesamples.com/samples/code/html/sample.html">DESCARGAR</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ... (el script de traducciones, menú toggle y partículas se mantiene igual que en la versión anterior)
+
+// Solo agregamos esto para manejar z-index del header cuando sidebar está abierto
+const header = document.getElementById('header');
+const sidebarEl = document.getElementById('sidebar');
+const overlayEl = document.getElementById('overlay');
+
+function toggleMenu() {
+  sidebarEl.classList.toggle('active');
+  overlayEl.classList.toggle('active');
+  header.classList.toggle('sidebar-open');
+}
+
+document.getElementById('openMenu').onclick = toggleMenu;
+document.getElementById('closeMenu').onclick = toggleMenu;
+overlayEl.onclick = toggleMenu;
+
+// Loader descarga (sin cambios)
+const downloadLoader = document.getElementById('download-loader');
+const progressBar = document.getElementById('progress');
+
+document.querySelectorAll('.dl-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const url = btn.getAttribute('data-url');
+    if (!url) return;
+
+    downloadLoader.style.display = 'flex';
+    progressBar.style.width = '0%';
+
+    setTimeout(() => progressBar.style.width = '35%', 100);
+    setTimeout(() => progressBar.style.width = '70%', 1300);
+    setTimeout(() => progressBar.style.width = '100%', 2800);
+
+    setTimeout(() => {
+      window.open(url, '_blank');
+      downloadLoader.style.display = 'none';
+      progressBar.style.width = '0%';
+    }, 3800);
+  });
+});
+
+// Partículas (igual que antes)
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let particles = [];
+
+function initParticles() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  particles = [];
+  const num = Math.floor(canvas.width * canvas.height / 10000); // un poco menos denso en móvil
+  for(let i = 0; i < num; i++){
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 0.5,
+      vy: (Math.random() - 0.5) * 0.5,
+      radius: Math.random() * 2 + 0.7
+    });
+  }
+}
+
+function drawParticles() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  for(let i = 0; i < particles.length; i++){
+    for(let j = i+1; j < particles.length; j++){
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const dist = Math.hypot(dx, dy);
+      if(dist < 130){
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.strokeStyle = `rgba(255,45,85,${(130 - dist)/130 * 0.15})`;
+        ctx.lineWidth = 0.7;
+        ctx.stroke();
+      }
+    }
+  }
+
+  ctx.fillStyle = "rgba(255,45,85,0.85)";
+  particles.forEach(p => {
+    p.x += p.vx;
+    p.y += p.vy;
+    if(p.x < 0 || p.x > canvas.width) p.vx *= -1;
+    if(p.y < 0 || p.y > canvas.height) p.vy *= -1;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.radius, 0, Math.PI*2);
+    ctx.fill();
+  });
+
+  requestAnimationFrame(drawParticles);
+}
+
+initParticles();
+drawParticles();
+window.onresize = initParticles;
+</script>
+</body>
+</html>
