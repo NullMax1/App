@@ -1,113 +1,87 @@
 <!DOCTYPE html>
-<html lang="es">
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BRUSMODS</title>
-<meta name="theme-color" content="#0135FF">
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;900&display=swap');
+  <title>EaglercraftX</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    /* Sayfa ve oyun çerçevesi için temel düzenlemeler */
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden; /* Sayfanın gereksiz kaymasını engeller */
+    }
 
-* { box-sizing: border-box; font-family: 'Poppins', sans-serif; margin:0; padding:0; }
-body {
-  margin: 0;
-  background: radial-gradient(circle at top, #0135FF 0%, #001122 70%, #000 100%);
-  color: #fff;
-  overflow-x: hidden;
-  min-height: 100vh;
-}
-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+    #game_frame {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #000; /* Arka plan rengi, isteğe bağlı */
+    }
+  </style>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/bubbls/loltheygotbannedfromjsdelivr@38f40924ae70b843f3d4d0a5dc3d6ba13ca3a461/classes.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/bubbls/loltheygotbannedfromjsdelivr@38f40924ae70b843f3d4d0a5dc3d6ba13ca3a461/fix-webm-duration.js"></script>
+  <script type="text/javascript">
+    window.addEventListener('load', function () {
+      window.focus();
+      document.body.addEventListener('click', function (e) {
+        window.focus();
+      }, false);
+    });
 
-/* HEADER */
-header {
-  background: rgba(0,0,0,0.7);
-  backdrop-filter: blur(12px);
-  padding: 16px 24px;
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 200; /* Mayor z-index para que quede SOBRE el menú cuando está abierto */
-  border-bottom: 1px solid rgba(1,53,255,0.25);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.top { display: flex; align-items: center; gap: 16px; }
-.top img { height: 58px; filter: drop-shadow(0 0 8px #0135FF); }
-.brand { font-size: 26px; font-weight: 900; letter-spacing: 1px; background: linear-gradient(90deg, #00aaff, #0135FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
-/* MENÚ BTN CON ANIMACIÓN A X */
-.menu-btn {
-  background: none; border: none; cursor: pointer; display: flex; flex-direction: column; gap: 6px; position: relative; z-index: 201;
-}
-.menu-btn span { width: 32px; height: 3px; background: #00aaff; border-radius: 2px; transition: all 0.3s ease; }
-.menu-btn.active span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
-.menu-btn.active span:nth-child(2) { opacity: 0; transform: scale(0); }
-.menu-btn.active span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
-
-/* MENÚ LATERAL */
-.side-menu {
-  position: fixed; top: 0; right: -320px; width: 320px; height: 100vh;
-  background: rgba(5,5,30,0.94); backdrop-filter: blur(16px);
-  transition: right 0.45s cubic-bezier(0.16,1,0.3,1);
-  z-index: 100; /* Menor que el header para que el header quede encima */
-  padding: 80px 30px 30px; border-left: 1px solid rgba(1,53,255,0.35);
-}
-.side-menu.active { right: 0; }
-.side-menu h3 { color: #00aaff; font-size: 1.4rem; margin-bottom: 1.5rem; letter-spacing: 1px; }
-.side-menu a {
-  display: block; color: #ddd; text-decoration: none; margin: 1.2rem 0; font-size: 1.1rem; font-weight: 500;
-  transition: all 0.3s; padding: 8px 12px; border-radius: 8px;
-}
-.side-menu a:hover { color: #fff; background: rgba(1,53,255,0.15); transform: translateX(8px); }
-
-/* Botón de música */
-#musicToggleBtn {
-  width: 100%; padding: 14px 20px; margin: 12px 0; border: none; border-radius: 14px;
-  background: linear-gradient(135deg, #0135FF, #0088ff); color: white; font-weight: 700;
-  cursor: pointer; transition: all 0.35s; box-shadow: 0 4px 15px rgba(1,53,255,0.5);
-  display: flex; align-items: center; justify-content: center; font-size: 1rem;
-  position: relative; overflow: hidden;
-}
-#musicToggleBtn::before {
-  content: ''; position: absolute; inset: 0; background: radial-gradient(circle at center, rgba(255,255,255,0.2), transparent);
-  opacity: 0; transition: opacity 0.4s;
-}
-#musicToggleBtn:hover::before { opacity: 0.6; }
-#musicToggleBtn:hover { transform: translateY(-4px) scale(1.04); box-shadow: 0 10px 30px rgba(1,53,255,0.7); }
-#musicToggleBtn.active { animation: pulseGlowBtn 2s infinite alternate; }
-@keyframes pulseGlowBtn { 0% { box-shadow: 0 0 15px #00aaff; } 100% { box-shadow: 0 0 35px #00aaff; } }
-
-/* CLOSE MENU */
-.close-menu {
-  position: absolute; top: 20px; right: 25px; background: none; border: none; color: #00aaff; font-size: 2.5rem; font-weight: bold; cursor: pointer;
-  transition: all 0.3s;
-}
-.close-menu:hover { color: #fff; transform: rotate(90deg) scale(1.2); }
-
-/* HERO, CARDS, FOOTER, LOADER (mantengo lo mejorado anterior) */
-.hero { position: relative; z-index: 2; text-align: center; padding: 140px 20px 80px; min-height: 70vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-.hero h1 {
-  font-size: clamp(2.8rem, 9vw, 5rem); font-weight: 900; margin: 0;
-  background: linear-gradient(90deg, #00aaff, #ffffff, #00aaff);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-size: 200% 100%; animation: shine 6s linear infinite;
-  text-shadow: 0 0 30px rgba(0,170,255,0.6);
-}
-@keyframes shine { 0%, 100% { background-position: 0% } 50% { background-position: -200% } }
-
-.hero p { font-size: 1.3rem; color: #b0e0ff; max-width: 600px; margin: 1.2rem auto; opacity: 0.95; }
-
-.btn-neon {
-  position: relative; padding: 16px 40px; font-size: 1.2rem; font-weight: 700;
-  color: #00aaff; text-decoration: none; border: 2px solid #00aaff; border-radius: 50px;
-  background: rgba(1,53,255,0.08); overflow: hidden; transition: all 0.4s;
-  box-shadow: 0 0 20px rgba(0,170,255,0.4); display: inline-block;
-}
-.btn-neon::before {
-  content: ''; position: absolute; inset: -2px; background: linear-gradient(45deg, #0135FF, #00aaff, #40c4ff, #0135FF);
-  background-size: 400%; filter: blur(12px); opacity: 0.6; animation: glowing 7s linear infinite;
-  z-index: -1; border-radius: 50px;
-}
+    window.addEventListener("load", () => {
+      if (document.location.href.startsWith("file:")) {
+        console.warn("HTTP required. Do not open this file locally, run it via a local HTTP server.");
+      } else {
+        // Default configuration for EaglercraftX
+        if (!window.eaglercraftXOpts) {
+          window.eaglercraftXOpts = {
+            container: "game_frame",
+            assetsURI: "https://cdn.jsdelivr.net/gh/bubbls/loltheygotbannedfromjsdelivr@38f40924ae70b843f3d4d0a5dc3d6ba13ca3a461/assets.epk",
+            localesURI: "lang/",
+            servers: [
+              { addr: "wss://mc.arch.lol/", name: "ArchMC" },
+              { addr: "wss://mc.asspixel.net", name: "AssPixel" },
+              { addr: "wss://sus.shhnowisnottheti.me", name: "Ayunboom" },
+              { addr: "wss://aeon-network.net/1.8", name: "Aeon" },
+              { addr: "wss://zentic.org/", name: "Zentic" }
+            ]
+          };
+        }
+        // Ensure container element exists
+        let container = document.querySelector(`#${window.eaglercraftXOpts.container}`);
+        if (!container) {
+          console.error("Container element not found. Creating a default one.");
+          container = document.createElement("div");
+          container.id = window.eaglercraftXOpts.container;
+          document.body.appendChild(container);
+        }
+        try {
+          main();
+        } catch (error) {
+          console.error("Error starting EaglercraftX:", error);
+        }
+      }
+    });
+  </script>
+</head>
+<body>
+  <!-- Ensure essential DOM elements exist -->
+  <div id="game_frame"></div>
+  <div class="_eaglercraftX_wrapper_element"></div>
+  <div id="_eaglercraftX_crashReason" style="display:none;"></div>
+  <div id="_eaglercraftX_crashUserAgent" style="display:none;"></div>
+</body>
+</html>}
 .btn-neon:hover { color: white; transform: translateY(-4px) scale(1.06); box-shadow: 0 0 40px #00aaff; }
 
 .section {
