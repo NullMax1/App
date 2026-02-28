@@ -1,220 +1,103 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <title>NULLX EDITION | Minecraft Mobile Boost</title>
+  <title>NULLX EDITION | Minecraft Mobile</title>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   
   <style>
-    html, body {
-      margin: 0; padding: 0; width: 100%; height: 100%;
-      overflow: hidden; background-color: #000;
-      /* Evita toques fantasmas y zoom accidental en iOS */
-      touch-action: none; 
-      position: fixed;
-    }
+    /* Estilos base para evitar fallos visuales */
+    html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #000; font-family: sans-serif; }
+    #game_frame { width: 100vw; height: 100vh; position: absolute; top: 0; left: 0; }
 
-    #game_frame { 
-      width: 100vw; height: 100vh; 
-      position: absolute; top: 0; left: 0;
-      /* Suaviza el renderizado en algunos navegadores */
-      image-rendering: pixelated; 
-    }
-
-    /* Pantalla de Inicio Personalizada con desenfoque reducido para rendimiento */
+    /* UI MEJORADA "BACANA" */
     #start_screen {
-      position: fixed;
-      inset: 0;
-      background: radial-gradient(circle, #1a1a2e 0%, #0f0f1b 100%);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      text-align: center;
+      position: fixed; inset: 0;
+      background: radial-gradient(circle at center, #0a192f 0%, #020c1b 100%);
+      display: flex; justify-content: center; align-items: center; z-index: 9999;
     }
 
-    .main-container {
-      padding: 30px;
-      border: 2px solid #00aaff;
-      border-radius: 20px;
-      background: rgba(0, 0, 0, 0.6);
-      /* Backdrop-filter consume mucha GPU, lo quitamos para optimizar */
-      /* backdrop-filter: blur(10px); */
-      box-shadow: 0 0 20px rgba(0, 170, 255, 0.2);
-      max-width: 80%;
+    .glass-card {
+      padding: 30px; width: 80%; max-width: 400px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 20px; border: 1px solid #00aaff;
+      box-shadow: 0 0 25px rgba(0, 170, 255, 0.4);
+      text-align: center; color: white;
     }
 
-    .brand-title {
-      color: #00aaff;
-      font-size: 2.2rem;
-      margin-bottom: 5px;
-      text-shadow: 0 0 10px #00aaff;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-    }
-
-    .status-text {
-      font-size: 0.85rem;
-      margin-bottom: 20px;
-      color: #ccc;
-      letter-spacing: 1px;
-    }
-
-    .info-box {
-      background: rgba(255, 0, 0, 0.1);
-      border: 1px solid rgba(255, 0, 0, 0.3);
-      padding: 10px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-      font-size: 13px;
-      color: #ff9999;
-    }
-
+    .brand-title { font-size: 2.5rem; margin: 0; color: #00aaff; text-shadow: 0 0 10px #00aaff; }
+    
     .play_btn {
-      padding: 15px 40px;
-      font-size: 18px;
-      background: linear-gradient(45deg, #0066cc, #00ccaa);
-      color: white;
-      border: none;
-      border-radius: 50px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: 0.2s;
-      box-shadow: 0 4px 15px rgba(0, 255, 204, 0.3);
+      width: 100%; padding: 15px; margin-top: 20px;
+      font-size: 1.2rem; font-weight: bold; color: white;
+      background: linear-gradient(90deg, #0055ff, #00aaff);
+      border: none; border-radius: 10px; cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0, 170, 255, 0.3);
     }
 
-    .play_btn:hover {
-      transform: scale(1.03);
-      box-shadow: 0 4px 20px rgba(0, 255, 204, 0.5);
-    }
-
-    .social-btns {
-      margin-top: 20px;
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .small-btn {
-      text-decoration: none;
-      color: #999;
-      font-size: 12px;
-      padding: 6px 12px;
-      border: 1px solid #333;
-      border-radius: 4px;
-      transition: 0.2s;
-    }
-
-    .small-btn:hover {
-      color: white;
-      border-color: #00aaff;
-      background: rgba(0, 170, 255, 0.1);
-    }
-
-    /* Ocultar elementos nativos de Eagler que puedan molestar */
-    #_eaglercraftX_crashReason, #_eaglercraftX_crashUserAgent { display: none; }
+    .social-row { display: flex; gap: 10px; margin-top: 15px; }
+    .social-link { flex: 1; padding: 10px; background: rgba(255,255,255,0.1); border-radius: 5px; color: #fff; text-decoration: none; font-size: 12px; }
+    
+    .info-low { font-size: 10px; color: #ff5555; margin-top: 15px; text-transform: uppercase; }
   </style>
 
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/bubbls/loltheygotbannedfromjsdelivr@38f40924ae70b843f3d4d0a5dc3d6ba13ca3a461/classes.min.js" async></script>
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/bubbls/loltheygotbannedfromjsdelivr@38f40924ae70b843f3d4d0a5dc3d6ba13ca3a461/fix-webm-duration.js" defer></script>
-
-  <script type="text/javascript">
-    async function start() {
-      // Ocultar la pantalla de inicio inmediatamente
-      document.getElementById('start_screen').style.display = 'none';
-      
-      // Intentar Pantalla Completa y Bloqueo de Orientación para ganar FPS
-      try {
-        if (document.documentElement.requestFullscreen) {
-          await document.documentElement.requestFullscreen();
-        }
-        if (screen.orientation && screen.orientation.lock) {
-          await screen.orientation.lock('landscape').catch(() => {});
-        }
-      } catch (e) {
-        console.log("Modo de pantalla completa/orientación no disponible");
-      }
-
-      // --- CONFIGURACIÓN AGRESIVA DE OPTIMIZACIÓN ---
-      window.eaglercraftXOpts = {
-        container: "game_frame",
-        assetsURI: "https://cdn.jsdelivr.net/gh/bubbls/loltheygotbannedfromjsdelivr@38f40924ae70b843f3d4d0a5dc3d6ba13ca3a461/assets.epk",
-        localesURI: "lang/",
-        
-        // Branding Interno (Aparece en los menús de Minecraft)
-        mainMenu: {
-          splashes: ["¡NULLX Boost!", "Pocos Chunks = Más FPS", "By NULLX Team"],
-          brand: "NULLX BOOSTED" 
-        },
-        
-        // --- NIVEL 1: AJUSTES DE MOTOR AGRESIVOS ---
-        chunkFix: true,            // Corrige errores de carga de chunks
-        fastRender: true,          // Activa renderizado rápido
-        lowDetail: true,           // Desactiva detalles visuales pesados
-        allowMaxRenderDistance: false, // Prohíbe distancias de renderizado altas
-        maxChunkRadius: 2,         // FUERZA la distancia de renderizado a 2 chunks (MÍNIMO)
-        enableFastMath: true,      // Usa matemáticas más rápidas pero menos precisas
-        memoryLimit: 512,          // Intenta limitar el uso de RAM (en MB)
-
-        servers: [
-          { addr: "wss://mc.arch.lol/", name: "NULLX | ArchMC (Lobby)" }
-        ]
-      };
-
-      // Iniciar el juego
-      try {
-        // --- NIVEL 2: PRIORIDAD DE CPU (Experimental) ---
-        // Intentamos ejecutar main en un hilo con prioridad si el navegador lo permite
-        if (window.requestIdleCallback) {
-            requestIdleCallback(() => main(), { timeout: 100 });
-        } else {
-            main();
-        }
-      } catch (err) {
-        console.error("Error al cargar el motor:", err);
-      }
-    }
-
-    // Alerta si se abre como archivo local y limpieza de memoria pre-carga
-    window.addEventListener("load", () => {
-      if (document.location.href.startsWith("file:")) {
-        alert("¡CUIDADO! Debes subir este archivo a un servidor (como GitHub Pages) para que funcione.");
-      }
-      // Limpieza preventiva de memoria si el navegador lo soporta
-      if (window.gc) window.gc(); 
-    });
-  </script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/bubbls/loltheygotbannedfromjsdelivr@38f40924ae70b843f3d4d0a5dc3d6ba13ca3a461/classes.min.js"></script>
 </head>
 <body>
 
   <div id="start_screen">
-    <div class="main-container">
-      <h1 class="brand-title">NULLX <span style="color: #fff;">BOOST</span></h1>
+    <div class="glass-card">
+      <h1 class="brand-title">NULLX</h1>
+      <p style="margin: 5px 0; letter-spacing: 3px;">BOOSTED EDITION</p>
       
-      <p class="status-text">MOTOR: <span style="color: #00ff00;">OPTIMIZADO</span> • RAM LIMIT: <span style="color: #00ff00;">512MB</span></p>
+      <button class="play_btn" id="btn_play">¡ENTRAR AL MUNDO!</button>
       
-      <div class="info-box">
-        <b>PARA EVITAR LAG:</b><br>
-        1. Pon el celular en <b>Horizontal</b>.<br>
-        2. Cierra otras pestañas del navegador.<br>
-        3. DENTRO DEL JUEGO: Ve a Opciones > Gráficos y pon la distancia en <b>2 chunks</b>.
+      <div class="social-row">
+        <a href="https://t.me/NULLXOFFICIAL" class="social-link">Telegram</a>
+        <a href="https://chat.whatsapp.com/CkN3rWTIQeHF293yhpWkLb" class="social-link">WhatsApp</a>
       </div>
 
-      <div class="button-group">
-        <button class="play_btn" onclick="start()">¡JUGAR FLUIDO!</button>
-        
-        <div class="social-btns">
-          <a href="https://t.me/NULLXOFFICIAL" target="_blank" class="small-btn">Telegram</a>
-          <a href="https://chat.whatsapp.com/CkN3rWTIQeHF293yhpWkLb" target="_blank" class="small-btn">WhatsApp</a>
-        </div>
-      </div>
+      <p class="info-low">Optimización: 2 Chunks / 60 FPS</p>
     </div>
   </div>
 
   <div id="game_frame"></div>
-  <div class="_eaglercraftX_wrapper_element"></div>
 
+  <script type="text/javascript">
+    // Función de inicio manual para evitar que el navegador bloquee el proceso
+    document.getElementById('btn_play').addEventListener('click', function() {
+      // 1. Ocultar interfaz
+      document.getElementById('start_screen').style.display = 'none';
+      
+      // 2. Intentar pantalla completa (Opcional, si falla sigue cargando)
+      try {
+        if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
+      } catch(e) {}
+
+      // 3. Configuración del motor (Branding NULLX)
+      window.eaglercraftXOpts = {
+        container: "game_frame",
+        assetsURI: "https://cdn.jsdelivr.net/gh/bubbls/loltheygotbannedfromjsdelivr@38f40924ae70b843f3d4d0a5dc3d6ba13ca3a461/assets.epk",
+        localesURI: "lang/",
+        mainMenu: {
+          splashes: ["NULLX CLIENT READY"],
+          brand: "NULLX BOOST" 
+        },
+        // Optimización agresiva que ya te funcionó a 60 FPS
+        chunkFix: true,
+        fastRender: true,
+        lowDetail: true,
+        maxChunkRadius: 2,
+        servers: [{ addr: "wss://mc.arch.lol/", name: "NULLX | ArchMC" }]
+      };
+
+      // 4. EJECUCIÓN DIRECTA
+      if (typeof main === "function") {
+        main();
+      } else {
+        alert("El motor no cargó correctamente. Reintenta recargar la página.");
+      }
+    });
+  </script>
 </body>
 </html>
