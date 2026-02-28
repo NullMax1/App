@@ -1,77 +1,47 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>EaglercraftX Fixed</title>
+  <title>EaglercraftX Optimized</title>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <style>
-    /* Eliminamos las rotaciones raras que confunden al táctil */
     html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background-color: #000;
+      margin: 0; padding: 0; width: 100%; height: 100%;
+      overflow: hidden; background-color: #000;
     }
-
-    #game_frame {
-      width: 100vw;
-      height: 100vh;
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-
-    /* Botón de inicio centrado y grande para asegurar el toque */
+    #game_frame { width: 100vw; height: 100vh; }
     #start_screen {
-      position: fixed;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      background: #111;
-      z-index: 9999;
-      color: white;
-      font-family: sans-serif;
+      position: fixed; inset: 0; display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      background: #111; z-index: 9999; color: white; font-family: sans-serif;
     }
-
     .play_btn {
-      padding: 20px 40px;
-      font-size: 20px;
-      background: #00AA00;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: bold;
+      padding: 15px 30px; font-size: 18px; background: #00AA00;
+      color: white; border: none; border-radius: 8px; cursor: pointer;
     }
   </style>
 
   <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/bubbls/loltheygotbannedfromjsdelivr@38f40924ae70b843f3d4d0a5dc3d6ba13ca3a461/classes.min.js"></script>
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/bubbls/loltheygotbannedfromjsdelivr@38f40924ae70b843f3d4d0a5dc3d6ba13ca3a461/fix-webm-duration.js"></script>
-
+  
   <script type="text/javascript">
     async function start() {
-      const btn = document.getElementById('start_screen');
+      document.getElementById('start_screen').style.display = 'none';
       
-      // Intentar poner pantalla completa real
+      // Intentar pantalla completa para ganar FPS
       try {
         if (document.documentElement.requestFullscreen) {
           await document.documentElement.requestFullscreen();
         }
       } catch (e) {}
 
-      btn.style.display = 'none';
-
       window.eaglercraftXOpts = {
         container: "game_frame",
         assetsURI: "https://cdn.jsdelivr.net/gh/bubbls/loltheygotbannedfromjsdelivr@38f40924ae70b843f3d4d0a5dc3d6ba13ca3a461/assets.epk",
         localesURI: "lang/",
-        servers: [
-          { addr: "wss://mc.arch.lol/", name: "ArchMC" }
-        ]
+        // Optimización de motor
+        chunkFix: true,
+        fastRender: true,
+        servers: [{ addr: "wss://mc.arch.lol/", name: "ArchMC" }]
       };
 
       main();
@@ -80,12 +50,8 @@
 </head>
 <body>
   <div id="start_screen">
-    <h2>EaglercraftX Mobile</h2>
-    <p>Gira tu celular a horizontal y toca el botón:</p>
-    <button class="play_btn" onclick="start()">¡JUGAR!</button>
+    <button class="play_btn" onclick="start()">INICIAR (MODO FLUIDO)</button>
   </div>
-
   <div id="game_frame"></div>
-  <div class="_eaglercraftX_wrapper_element"></div>
 </body>
 </html>
