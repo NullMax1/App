@@ -1,78 +1,242 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <title>NULLX EDITION | Minecraft Mobile</title>
+  <title>NULLX RED | Minecraft Mobile</title>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   
   <style>
-    /* TU BASE QUE FUNCIONA */
-    html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #000; font-family: sans-serif; }
+    /* Base cyberpunk rojo */
+    html, body {
+      margin: 0; padding: 0; width: 100%; height: 100%;
+      overflow: hidden; background: #0d0005;
+      font-family: 'Segoe UI', system-ui, sans-serif; color: #fff;
+    }
+
     #game_frame { width: 100vw; height: 100vh; position: absolute; top: 0; left: 0; }
 
-    /* PANTALLA DE CARGA (LOGO) */
+    /* Loader con estrella veloz + rayos */
     #loader_screen {
       position: fixed; inset: 0; background: #000;
       display: flex; flex-direction: column; justify-content: center; align-items: center;
-      z-index: 10000; transition: opacity 0.5s ease;
-    }
-    .logo-anim {
-      width: 100px; height: 100px; border-radius: 20px;
-      box-shadow: 0 0 20px #00aaff;
-      animation: pulse 1.5s infinite ease-in-out;
-    }
-    @keyframes pulse {
-      0% { transform: scale(0.9); opacity: 0.7; }
-      50% { transform: scale(1); opacity: 1; }
-      100% { transform: scale(0.9); opacity: 0.7; }
+      z-index: 10001; transition: opacity 0.7s ease-out;
     }
 
-    /* TU UI "BACANA" QUE YA TENIAS */
+    .star-container {
+      position: relative;
+      width: 110px; height: 110px;
+      display: flex; justify-content: center; align-items: center;
+    }
+
+    .star-core {
+      font-size: 70px;
+      color: #ff1040;
+      filter: drop-shadow(0 0 25px #ff1040) drop-shadow(0 0 40px #ff1040);
+      animation: spinStar 0.55s linear infinite;
+    }
+
+    .star-trail {
+      position: absolute;
+      width: 140px; height: 140px;
+      border: 4px solid transparent;
+      border-top: 4px solid #ff1040;
+      border-radius: 50%;
+      box-shadow: 0 -8px 20px rgba(255, 16, 64, 0.7);
+      animation: spinStar 0.38s linear infinite reverse;
+    }
+
+    @keyframes spinStar {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .lightning-flash {
+      position: absolute; inset: 0;
+      pointer-events: none; opacity: 0;
+      animation: lightningHit 2.8s infinite;
+    }
+
+    @keyframes lightningHit {
+      0%, 92% { opacity: 0; }
+      94% { opacity: 0.15; background: #ff1040; }
+      96% { opacity: 0.35; background: #fff; }
+      98% { opacity: 0.2; background: #ff1040; }
+      100% { opacity: 0; }
+    }
+
+    /* Fondo sutil grid cyber (como antes) */
+    body::before {
+      content: "";
+      position: fixed; inset: 0;
+      background: 
+        linear-gradient(rgba(255,20,80,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,20,80,0.03) 1px, transparent 1px);
+      background-size: 45px 45px;
+      pointer-events: none;
+      z-index: -2;
+      opacity: 0.4;
+    }
+
+    /* Start screen (el menú que te gustaba) */
     #start_screen {
       position: fixed; inset: 0;
-      background: radial-gradient(circle at center, #0a192f 0%, #020c1b 100%);
-      display: none; /* Se activa despues del logo */
-      justify-content: center; align-items: center; z-index: 9999;
+      background: radial-gradient(circle at 30% 20%, #1a000a 0%, #000 70%);
+      display: none; justify-content: center; align-items: center; z-index: 9999;
+      animation: fadeInBg 1.8s ease-out forwards;
     }
+
+    @keyframes fadeInBg {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
     .glass-card {
-      padding: 30px; width: 80%; max-width: 400px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 20px; border: 1px solid #00aaff;
-      box-shadow: 0 0 25px rgba(0, 170, 255, 0.4);
-      text-align: center; color: white;
+      padding: 40px 30px;
+      width: 85%; max-width: 420px;
+      background: rgba(20, 0, 8, 0.35);
+      border: 1px solid rgba(255, 40, 100, 0.4);
+      border-radius: 24px;
+      box-shadow: 0 0 40px rgba(255, 30, 90, 0.25), inset 0 0 30px rgba(255, 20, 80, 0.12);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      text-align: center;
+      transform: translateY(40px);
+      opacity: 0;
+      animation: cardEnter 1.3s 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
     }
-    .brand-title { font-size: 2.5rem; margin: 0; color: #00aaff; text-shadow: 0 0 10px #00aaff; }
+
+    @keyframes cardEnter {
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .brand-title {
+      font-size: 4.2rem; margin: 0; font-weight: 900; letter-spacing: 8px;
+      color: #ff1040;
+      text-shadow: 
+        0 0 8px #ff1040,
+        0 0 16px #ff1040,
+        0 0 30px #ff1040,
+        0 0 50px rgba(255,20,80,0.7);
+      animation: neonPulse 3s infinite alternate;
+    }
+
+    @keyframes neonPulse {
+      0%, 100% { text-shadow: 0 0 8px #ff1040, 0 0 16px #ff1040, 0 0 30px #ff1040, 0 0 45px rgba(255,20,80,0.6); }
+      50% { text-shadow: 0 0 12px #ff1040, 0 0 25px #ff1040, 0 0 50px #ff1040, 0 0 90px rgba(255,20,80,0.9); }
+    }
+
+    .subtitle {
+      margin: 8px 0 30px;
+      font-size: 1.1rem;
+      letter-spacing: 4px;
+      color: #ff6080;
+      text-shadow: 0 0 10px rgba(255, 96, 128, 0.7);
+      opacity: 0.9;
+    }
+
     .play_btn {
-      width: 100%; padding: 15px; margin-top: 20px;
-      font-size: 1.2rem; font-weight: bold; color: white;
-      background: linear-gradient(90deg, #0055ff, #00aaff);
-      border: none; border-radius: 10px; cursor: pointer;
+      position: relative;
+      width: 100%; padding: 18px; margin-top: 25px;
+      font-size: 1.4rem; font-weight: bold; color: #fff;
+      background: linear-gradient(90deg, #c00, #ff1040, #c00);
+      background-size: 200% 100%;
+      border: none; border-radius: 14px;
+      cursor: pointer;
+      box-shadow: 0 0 25px rgba(255, 20, 80, 0.6), inset 0 0 15px rgba(255,255,255,0.15);
+      transition: all 0.4s;
+      overflow: hidden;
+      text-shadow: 0 0 8px #000;
+      animation: bgSlide 5s linear infinite;
     }
-    .social-row { display: flex; gap: 10px; margin-top: 15px; }
-    .social-link { flex: 1; padding: 10px; background: rgba(255,255,255,0.1); border-radius: 5px; color: #fff; text-decoration: none; font-size: 12px; }
-    .info-low { font-size: 10px; color: #ff5555; margin-top: 15px; text-transform: uppercase; }
+
+    @keyframes bgSlide {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
+    .play_btn:hover {
+      transform: translateY(-4px) scale(1.04);
+      box-shadow: 0 0 60px rgba(255, 30, 90, 0.9), 0 15px 40px rgba(0,0,0,0.5);
+      animation: none;
+    }
+
+    .play_btn::before {
+      content: "";
+      position: absolute; top: 0; left: -100%;
+      width: 50%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      transition: left 0.7s;
+    }
+
+    .play_btn:hover::before { left: 100%; }
+
+    .play_btn::after {
+      content: "";
+      position: absolute; bottom: -35%; left: 10%;
+      width: 80%; height: 40%;
+      background: radial-gradient(ellipse at center, rgba(255,30,90,0.35) 0%, transparent 70%);
+      filter: blur(15px);
+      opacity: 0.6;
+      transform: scale(1.1, 0.4) rotateX(60deg);
+      pointer-events: none;
+      transition: opacity 0.5s;
+    }
+
+    .play_btn:hover::after { opacity: 0.9; }
+
+    .social-row {
+      display: flex; gap: 12px; margin-top: 30px;
+    }
+
+    .social-link {
+      flex: 1; padding: 12px;
+      background: rgba(255,30,90,0.12);
+      border: 1px solid rgba(255,40,100,0.4);
+      border-radius: 10px;
+      color: #ff6080; text-decoration: none; font-size: 0.95rem;
+      transition: all 0.3s;
+    }
+
+    .social-link:hover {
+      background: rgba(255,30,90,0.3);
+      color: #fff;
+      box-shadow: 0 0 20px rgba(255,40,100,0.5);
+      transform: translateY(-2px);
+    }
+
+    .info-low {
+      font-size: 0.75rem; color: #ff8080; margin-top: 25px;
+      opacity: 0.7; letter-spacing: 1px;
+    }
   </style>
 
   <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/bubbls/loltheygotbannedfromjsdelivr@38f40924ae70b843f3d4d0a5dc3d6ba13ca3a461/classes.min.js"></script>
 </head>
 <body>
 
+  <!-- Loader estrella veloz -->
   <div id="loader_screen">
-    <img src="https://via.placeholder.com/100/00aaff/ffffff?text=NULLX" class="logo-anim">
-    <p style="color: #00aaff; margin-top: 20px; letter-spacing: 2px; font-size: 12px;">CARGANDO...</p>
+    <div class="lightning-flash"></div>
+    <div class="star-container">
+      <div class="star-trail"></div>
+      <div class="star-core">★</div>
+    </div>
+    <p style="color: #ff1040; margin-top: 35px; letter-spacing: 6px; font-weight: bold; font-size: 13px;">ENTRANDO...</p>
   </div>
 
+  <!-- Menú principal (el que te gustaba) -->
   <div id="start_screen">
     <div class="glass-card">
       <h1 class="brand-title">NULLX</h1>
-      <p style="margin: 5px 0; letter-spacing: 3px;">BOOSTED EDITION</p>
+      <p class="subtitle">MINECRAFT JAVA</p>
       
-      <button class="play_btn" id="btn_play">¡ENTRAR AL MUNDO!</button>
+      <button class="play_btn" id="btn_play">¡INICIAR!</button>
       
       <div class="social-row">
-        <a href="https://t.me/NULLXOFFICIAL" class="social-link">Telegram</a>
-        <a href="https://chat.whatsapp.com/CkN3rWTIQeHF293yhpWkLb" class="social-link">WhatsApp</a>
+        <a href="https://t.me/NULLXOFFICIAL" class="social-link" target="_blank">Telegram</a>
+        <a href="https://chat.whatsapp.com/CkN3rWTIQeHF293yhpWkLb" class="social-link" target="_blank">WhatsApp</a>
       </div>
+
       <p class="info-low">Optimización: 2 Chunks / 60 FPS</p>
     </div>
   </div>
@@ -80,26 +244,27 @@
   <div id="game_frame"></div>
 
   <script type="text/javascript">
-    // Control de la animacion de entrada
+    // Loader → Menú
     window.onload = function() {
       setTimeout(() => {
         document.getElementById('loader_screen').style.opacity = '0';
         setTimeout(() => {
           document.getElementById('loader_screen').style.display = 'none';
           document.getElementById('start_screen').style.display = 'flex';
-        }, 500);
-      }, 2500); // 2.5 segundos de logo
+        }, 700);
+      }, 2800); // \~2.8s loader, ajusta si quieres más/menos
     };
 
-    // Tu lógica de inicio que SI funciona
-    document.getElementById('btn_play').addEventListener('click', function() {
+    // Botón play (sin cambios)
+    document.getElementById('btn_play').addEventListener('click', async function() {
       document.getElementById('start_screen').style.display = 'none';
       
       try {
-        if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
-        // Forzado de horizontal real
+        if (document.documentElement.requestFullscreen) {
+          await document.documentElement.requestFullscreen();
+        }
         if (screen.orientation && screen.orientation.lock) {
-          screen.orientation.lock('landscape').catch(e => console.log("Gira manual"));
+          await screen.orientation.lock('landscape').catch(() => {});
         }
       } catch(e) {}
 
@@ -108,7 +273,7 @@
         assetsURI: "https://cdn.jsdelivr.net/gh/bubbls/loltheygotbannedfromjsdelivr@38f40924ae70b843f3d4d0a5dc3d6ba13ca3a461/assets.epk",
         localesURI: "lang/",
         mainMenu: {
-          splashes: ["NULLX CLIENT READY"],
+          splashes: ["NULLX RED READY"],
           brand: "NULLX BOOST" 
         },
         chunkFix: true,
@@ -120,6 +285,8 @@
 
       if (typeof main === "function") {
         main();
+      } else {
+        alert("El motor no cargó correctamente. Reintenta recargar la página.");
       }
     });
   </script>
